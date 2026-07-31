@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>探究活動支援アプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="container">
+  <header class="hero">
+    <p class="label">探究活動支援アプリ</p>
+    <h1>探究サポーター</h1>
+    <p>資料の視覚化・分析・問いの深掘りをAIが支援します。</p>
+  </header>
+
+  <section id="menu" class="menu-grid">
+    <button class="menu-card" data-screen="imageScreen">
+      <span class="number">1</span>
+      <span><strong>PDFから1枚の画像作成</strong><small>選択した1ページをインフォグラフィックにします</small></span>
+    </button>
+    <button class="menu-card" data-screen="pdfScreen">
+      <span class="number">2</span>
+      <span><strong>PDFを分析</strong><small>良い点・改善点・5つの「なぜ？」を表示します</small></span>
+    </button>
+    <button class="menu-card" data-screen="siteScreen">
+      <span class="number">3</span>
+      <span><strong>サイトを分析</strong><small>公開URLの内容と構成を分析します</small></span>
+    </button>
+  </section>
+
+  <section id="imageScreen" class="screen hidden">
+    <div class="screen-head"><button class="back">← メニューへ</button><h2>PDFから1枚の画像作成</h2></div>
+    <div class="panel">
+      <label>班名<input id="imageGroup" placeholder="例：第7班"></label>
+      <label>PDF<input id="imagePdf" type="file" accept="application/pdf"></label>
+      <label>画像にするページ
+        <select id="imagePage"><option value="">PDFを選択してください</option></select>
+      </label>
+      <label>デザイン
+        <select id="imageStyle">
+          <option value="space">宇宙・未来技術</option>
+          <option value="science">科学・研究</option>
+          <option value="nature">環境・自然</option>
+          <option value="career">職業紹介</option>
+          <option value="simple">シンプル</option>
+        </select>
+      </label>
+      <label>追加指示<textarea id="imagePrompt" rows="4" placeholder="例：紺色を基調にし、重要な数値を大きくする"></textarea></label>
+      <div class="preview"><canvas id="pageCanvas"></canvas></div>
+      <button id="generateImageBtn" class="primary">画像を作成</button>
+      <p id="imageStatus" class="status"></p>
+    </div>
+    <div id="imageResultBox" class="panel hidden">
+      <h3>生成画像</h3>
+      <img id="imageResult" class="result-image" alt="生成された画像">
+      <button id="downloadImageBtn" class="secondary">PNGを保存</button>
+      <p class="warning">文字や数値に誤りがないか、必ず元資料と照合してください。</p>
+    </div>
+  </section>
+
+  <section id="pdfScreen" class="screen hidden">
+    <div class="screen-head"><button class="back">← メニューへ</button><h2>PDFを分析</h2></div>
+    <div class="panel">
+      <label>班名<input id="pdfGroup" placeholder="例：第7班"></label>
+      <label>PDF<input id="analysisPdf" type="file" accept="application/pdf"></label>
+      <button id="analyzePdfBtn" class="primary">PDFを分析</button>
+      <p id="pdfStatus" class="status"></p>
+    </div>
+    <div id="pdfResult" class="panel hidden result"></div>
+  </section>
+
+  <section id="siteScreen" class="screen hidden">
+    <div class="screen-head"><button class="back">← メニューへ</button><h2>サイトを分析</h2></div>
+    <div class="panel">
+      <label>公開URL<input id="siteUrl" type="url" placeholder="https://example.com"></label>
+      <button id="analyzeSiteBtn" class="primary">サイトを分析</button>
+      <p class="warning">ログインが必要なサイトや非公開ページは分析できません。</p>
+      <p id="siteStatus" class="status"></p>
+    </div>
+    <div id="siteResult" class="panel hidden result"></div>
+  </section>
+</main>
+<script type="module" src="script.js"></script>
+</body>
+</html>
