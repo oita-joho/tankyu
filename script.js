@@ -2,7 +2,7 @@ import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38
 pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
 // Cloud Run公開後に変更
-const API_BASE="https://YOUR-CLOUD-RUN-URL";
+const API_BASE="https://tankyu-support-api.onrender.com";
 
 let imagePdfDoc=null, generatedUrl="";
 
@@ -92,7 +92,7 @@ document.getElementById("analyzeSiteBtn").onclick=async()=>{
 };
 
 async function post(path,body){
-  if(API_BASE.includes("YOUR-CLOUD"))throw new Error("script.jsにCloud RunのURLを設定してください。");
+  if(!API_BASE.startsWith("https://"))throw new Error("APIのURLを設定してください。");
   const r=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
   const data=await r.json();if(!r.ok||!data.ok)throw new Error(data.error||"処理に失敗しました。");return data;
 }
