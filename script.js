@@ -454,7 +454,7 @@ function renderAnalysis(id, result, source) {
 function createAnalysisPrompt(result, source, aiType) {
   const sourceText =
     source.type === "pdf"
-      ? `このあと添付するPDFを`　//? `このあと添付するPDF「${source.name}」`　
+      ? `このあと添付するPDF「${source.name}」`　
       : `次のWebサイト\n${source.url}`;
 
   const common = `${sourceText}と、以下の分析結果をもとに、
