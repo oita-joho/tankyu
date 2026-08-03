@@ -85,7 +85,7 @@ document.getElementById("analyzeSiteBtn").onclick=async()=>{
   const btn=document.getElementById("analyzeSiteBtn");busy(btn,true,"分析中…");
   try{
     const data=await post("/analyze-site",{url});
-    renderAnalysis("siteResult",data.result);
+    renderAnalysis("siteResult",data.result,"site");
     setStatus("siteStatus","分析が完了しました。");
   }catch(e){setStatus("siteStatus",e.message,true)}
   finally{busy(btn,false,"サイトを分析")}
