@@ -12,7 +12,7 @@ let lastAnalysis = null;
 let lastSource = null;
 
 /* ========================================
-   画面の切り替え
+   画面の切り替え　
 ======================================== */
 
 document.querySelectorAll(".menu-card").forEach(button => {
