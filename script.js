@@ -90,22 +90,89 @@ document.getElementById("analyzeSiteBtn").onclick=async()=>{
   }catch(e){setStatus("siteStatus",e.message,true)}
   finally{busy(btn,false,"サイトを分析")}
 };
+function renderAnalysis(id,r,type){
+  const box=document.getElementById(id);
 
+  box.innerHTML=`
+    <h3>要約</h3>
+    <p>${esc(r.summary)}</p>
+
+    <h3>良い点</h3>
+    ${list(r.strengths)}
+
+    <h3>改善点</h3>
+    ${list(r.improvements)}
+
+    <h3>5つの「なぜ？」</h3>
+    ${list(r.whys,"why-list","ol")}
+
+    <h3>次に取り組むこと</h3>
+    ${list(r.nextSteps)}
+
+    <div class="ai-tools">
+      <h3>AIを活用する</h3>
+
+      <p class="ai-guide">
+        ボタンを押すと指示文をコピーし、選択したAIを開きます。
+      </p>
+
+      <div class="ai-buttons">
+        <button type="button" class="chatgpt-btn">
+          ChatGPTで画像を作成
+        </button>
+
+        <button type="button" class="gemini-btn">
+          Geminiで画像を作成
+        </button>
+
+        <button type="button" class="claude-btn">
+          Claudeで構成案を作成
+        </button>
+      </div>
+
+      <p class="ai-message"></p>
+    </div>
+  `;
+
+  box.classList.remove("hidden");
+
+  const prompt=createAiPrompt(r,type);
+
+  box.querySelector(".chatgpt-btn").onclick=()=>{
+    copyAndOpen(
+      prompt,
+      "https://chatgpt.com/",
+      box.querySelector(".ai-message")
+    );
+  };
+
+  box.querySelector(".gemini-btn").onclick=()=>{
+    copyAndOpen(
+      prompt,
+      "https://gemini.google.com/",
+      box.querySelector(".ai-message")
+    );
+  };
+
+  box.querySelector(".claude-btn").onclick=()=>{
+    const claudePrompt=
+      prompt+
+      "\n\n画像そのものではなく、発表ポスターの構成案と文章の改善案を作成してください。";
+
+    copyAndOpen(
+      claudePrompt,
+      "https://claude.ai/",
+      box.querySelector(".ai-message")
+    );
+  };
+}
 async function post(path,body){
   if(!API_BASE.startsWith("https://"))throw new Error("APIのURLを設定してください。");
   const r=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
   const data=await r.json();if(!r.ok||!data.ok)throw new Error(data.error||"処理に失敗しました。");return data;
 }
 function fileBase64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(f)})}
-function renderAnalysis(id,r){
-  const box=document.getElementById(id);
-  box.innerHTML=`<h3>要約</h3><p>${esc(r.summary)}</p>
-  <h3>良い点</h3>${list(r.strengths)}
-  <h3>改善点</h3>${list(r.improvements)}
-  <h3>5つの「なぜ？」</h3>${list(r.whys,"why-list","ol")}
-  <h3>次に取り組むこと</h3>${list(r.nextSteps)}`;
-  box.classList.remove("hidden");
-}
+
 function list(a,c="",tag="ul"){return `<${tag} class="${c}">${(a||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</${tag}>`}
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function setStatus(id,msg,err=false){const e=document.getElementById(id);e.textContent=msg;e.style.color=err?"#b91c1c":"#1d4ed8"}
