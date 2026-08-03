@@ -166,6 +166,54 @@ function renderAnalysis(id,r,type){
     );
   };
 }
+function createAiPrompt(r,type){
+  const sourceText=
+    type==="pdf"
+      ? "このあと添付するPDF"
+      : `次のWebサイト\n${document.getElementById("siteUrl").value.trim()}`;
+
+  return `${sourceText}と、以下の分析結果をもとに、
+高校生の探究発表用インフォグラフィックを作成してください。
+
+【要約】
+${r.summary}
+
+【良い点】
+${(r.strengths||[]).map((x,i)=>`${i+1}. ${x}`).join("\n")}
+
+【改善点】
+${(r.improvements||[]).map((x,i)=>`${i+1}. ${x}`).join("\n")}
+
+【探究を深める「なぜ？」】
+${(r.whys||[]).map((x,i)=>`${i+1}. ${x}`).join("\n")}
+
+【次に取り組むこと】
+${(r.nextSteps||[]).map((x,i)=>`${i+1}. ${x}`).join("\n")}
+
+【作成条件】
+・日本語で作成する
+・A4縦長のポスターにする
+・高校生が読みやすい表現にする
+・見出し、図、アイコン、箇条書きを使う
+・関係する職業を分かりやすく示す
+・「なぜ？」を5つ掲載する
+・元の資料にない事実や数値を勝手に作らない
+・文字化けや不自然な日本語を避ける`;
+}
+
+async function copyAndOpen(prompt,url,messageElement){
+  try{
+    await navigator.clipboard.writeText(prompt);
+
+    messageElement.textContent=
+      "指示文をコピーしました。開いたAIに貼り付けてください。";
+
+    window.open(url,"_blank");
+  }catch(e){
+    messageElement.textContent=
+      "指示文をコピーできませんでした。ブラウザの設定を確認してください。";
+  }
+}
 async function post(path,body){
   if(!API_BASE.startsWith("https://"))throw new Error("APIのURLを設定してください。");
   const r=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
