@@ -73,7 +73,7 @@ document.getElementById("analyzePdfBtn").onclick=async()=>{
       fileName:file.name,groupName:document.getElementById("pdfGroup").value,
       pdfBase64:await fileBase64(file)
     });
-    renderAnalysis("pdfResult",data.result);
+    renderAnalysis("pdfResult",data.result,"pdf");
     setStatus("pdfStatus","分析が完了しました。");
   }catch(e){setStatus("pdfStatus",e.message,true)}
   finally{busy(btn,false,"PDFを分析")}
